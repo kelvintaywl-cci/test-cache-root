@@ -1,27 +1,19 @@
 version: 2.1
 
-executors:
-  ubuntu2004:
-    machine:
-      image: ubuntu-2004:current
+orbs:
+  node: circleci/node@5.0.3
 
 jobs:
-  test:
-    executor: ubuntu2004
+  node-install:
+    resource_class: medium
+    docker:
+      - image: cimg/ruby:2.7.4
     steps:
-      - run: ls
-      - restore_cache:
-          keys:
-            - v1-deps
-      - run: |
-          mkdir -p root/.gradle/caches
-          echo "FOOBAR" > root/.gradle/caches/6.8
-      - save_cache:
-          key: v1-deps
-          paths:
-            - root/.gradle/caches
+      - node/install:
+          install-yarn: true
+          node-version: 16.18.1
 
 workflows:
   main:
     jobs:
-      - test
+      - node-install
