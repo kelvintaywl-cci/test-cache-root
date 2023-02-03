@@ -1,0 +1,27 @@
+version: 2.1
+
+executors:
+  ubuntu2004:
+    machine:
+      image: ubuntu-2004:current
+
+jobs:
+  test:
+    executor: ubuntu2004
+    steps:
+      - run: ls
+      - restore_cache:
+          keys:
+            - v1-deps
+      - run: |
+          mkdir -p root/.gradle/caches
+          echo "FOOBAR" > root/.gradle/caches/6.8
+      - save_cache:
+          key: v1-deps
+          paths:
+            - root/.gradle/caches
+
+workflows:
+  main:
+    jobs:
+      - test
